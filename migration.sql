@@ -1,9 +1,9 @@
-DROP TABLE IF EXISTS `roles`;
 DROP TABLE IF EXISTS `users`;
+DROP TABLE IF EXISTS `roles`;
 
 CREATE TABLE `roles` (
   id INT PRIMARY KEY AUTO_INCREMENT,
-  name VARCHAR() NOT NULL
+  name VARCHAR(50) NOT NULL
 );
 
 INSERT INTO `roles` VALUES (1, "Admin"), (2, "Member"), (3, "Guest");
@@ -14,6 +14,6 @@ CREATE TABLE `users` (
   username VARCHAR(100) NOT NULL UNIQUE,
   password TEXT NOT NULL,
   token TEXT,
-  role_id NOT NULL DEFAULT 3,
+  role_id INT NOT NULL DEFAULT 3,
   FOREIGN KEY (role_id) REFERENCES roles(id)
 );

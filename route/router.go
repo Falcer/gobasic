@@ -5,16 +5,10 @@ import (
 	"fmt"
 	"net/http"
 
+	"github.com/arganaphangquestian/gobasic/middleware"
 	"github.com/arganaphangquestian/gobasic/model"
 	"github.com/gorilla/mux"
 )
-
-func apiMiddleware(next http.Handler) http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, req *http.Request) {
-		w.Header().Set("Content-Type", "application/json")
-		next.ServeHTTP(w, req)
-	})
-}
 
 func handleBase(w http.ResponseWriter, req *http.Request) {
 	json.NewEncoder(w).Encode(model.APIResponse{
@@ -28,7 +22,8 @@ func Init() {
 	const port string = ":8080"
 	r := mux.NewRouter()
 	// Middleware
-	r.Use(apiMiddleware)
+	r.Use(middleware.JSON())
+	r.Use(middleware.CORS())
 	// Routing
 	r.HandleFunc("/", handleBase).Methods("GET")
 	r.HandleFunc("/users", getAllUser).Methods("GET")

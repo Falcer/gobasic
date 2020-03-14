@@ -22,8 +22,8 @@ func Init() {
 	const port string = ":8080"
 	r := mux.NewRouter()
 	// Middleware
-	r.Use(middleware.JSON())
-	r.Use(middleware.CORS())
+	r.Use(middleware.JSON)
+	r.Use(middleware.CORS)
 	// Routing
 	r.HandleFunc("/", handleBase).Methods("GET")
 	r.HandleFunc("/users", getAllUser).Methods("GET")

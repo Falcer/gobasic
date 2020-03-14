@@ -1,14 +1,14 @@
 package repository
 
 import (
-	"database/sql"
-
-	_ "github.com/go-sql-driver/mysql"
+	"github.com/jmoiron/sqlx"
+	// pq lib import
+	_ "github.com/lib/pq"
 )
 
 // OpenDB ahhhhh
-func OpenDB() (*sql.DB, error) {
-	db, err := sql.Open("mysql", "root:root123@tcp(172.17.0.2:3306)/gorest")
+func OpenDB() (*sqlx.DB, error) {
+	db, err := sqlx.Connect("postgres", "user=postgres dbname=go_login password=argadev123 sslmode=disable")
 	if err != nil {
 		return nil, err
 	}

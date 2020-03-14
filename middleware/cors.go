@@ -2,6 +2,7 @@ package middleware
 
 import "net/http"
 
+// CORS middleware
 func CORS(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, req *http.Request) {
 		w.Header().Set("Access-Control-Allow-Origin", "*")  // For Development we allow to open api to everyone

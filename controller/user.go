@@ -3,6 +3,7 @@ package controller
 import (
 	"github.com/arganaphangquestian/gobasic/model"
 	"github.com/arganaphangquestian/gobasic/repository"
+	"github.com/arganaphangquestian/gobasic/utils"
 )
 
 // GetAllUser handler
@@ -63,10 +64,13 @@ func Login(user model.User) model.APIResponse {
 	db, err := repository.OpenDB()
 	defer db.Close()
 
-	stmt := `SELECT * FROM users WHERE username=? AND password=?`
-
-	result := db.QueryRow(stmt, user.Username, user.Password)
-	err = result.Scan(&user.ID, &user.Email, &user.Username, &user.Password, &user.RoleID)
+	var userID string
+	args := map[string]interface{}{
+		"username": user.Username,
+		"password": user.Password,
+	}
+	stmt, err := db.PrepareNamed(`SELECT id FROM users WHERE "username"=:username AND "password"=:password`)
+	err = stmt.Get(&userID, args)
 
 	if err != nil {
 		return model.APIResponse{
@@ -76,9 +80,13 @@ func Login(user model.User) model.APIResponse {
 		}
 	}
 
+	token, err := utils.GenerateJWT(userID)
+
 	return model.APIResponse{
 		Status:  "success",
-		Message: "Register successfully",
-		Data:    user,
+		Message: "Login successfully",
+		Data: model.JWT{
+			Token: token,
+		},
 	}
 }

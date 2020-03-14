@@ -12,10 +12,10 @@ func GetAllUser() model.APIResponse {
 
 	defer db.Close()
 
-	result, err := db.Query("SELECT id, email, username, password, token, role_id FROM `users`")
+	result, err := db.Query("SELECT id, email, username, password, role_id FROM users")
 	for result.Next() {
 		var user model.User
-		_ = result.Scan(&user.ID, &user.Email, &user.Username, &user.Password, &user.Token, &user.RoleID)
+		_ = result.Scan(&user.ID, &user.Email, &user.Username, &user.Password, &user.RoleID)
 		users = append(users, user)
 	}
 
@@ -42,8 +42,6 @@ func Register(user model.User) model.APIResponse {
 	stmt := `INSERT INTO users (email, username, password, role_id) VALUE (?, ?, ?, ?)`
 
 	_, err = db.Exec(stmt, user.Email, user.Username, user.Password, "3")
-	user.Token = nil
-	user.RoleID = "3"
 
 	if err != nil {
 		return model.APIResponse{
@@ -68,7 +66,7 @@ func Login(user model.User) model.APIResponse {
 	stmt := `SELECT * FROM users WHERE username=? AND password=?`
 
 	result := db.QueryRow(stmt, user.Username, user.Password)
-	err = result.Scan(&user.ID, &user.Email, &user.Username, &user.Password, &user.Token, &user.RoleID)
+	err = result.Scan(&user.ID, &user.Email, &user.Username, &user.Password, &user.RoleID)
 
 	if err != nil {
 		return model.APIResponse{
